@@ -42,9 +42,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BingoCard.fs" />
     <Compile Include="Util.fs" />
     <Compile Include="Bingo.fs" />
+    <Compile Include="BingoCard.fs" />
     <None Include="Script.fsx" />
   </ItemGroup>
   <PropertyGroup>
