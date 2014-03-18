@@ -6,8 +6,9 @@ module BingoCard =
 
     type Cell =
         | Center
-        | NotCalled of int
+        | NotCalled of int        
         | Called of int
+        | InPattern of int
 
     let createNewCard () =
         let tmp = [|
@@ -40,6 +41,9 @@ module BingoCard =
             | Called num -> 
                 if num < 10 then sprintf " *%d" num
                 else sprintf "*%d" num
+            | InPattern num ->
+                if num < 10 then sprintf "  %d" num
+                else sprintf "#%d" num
 
         let getRowStr row =
             row 
