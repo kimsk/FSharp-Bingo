@@ -42,12 +42,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PatternMatcher.fs" />
     <Compile Include="Util.fs" />
     <Compile Include="Bingo.fs" />
     <Compile Include="BingoCard.fs" />
-    <None Include="Script.fsx" />
     <Compile Include="BallCaller.fs" />
+    <Compile Include="PatternMatcher.fs" />
+    <None Include="Script.fsx" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">12</MinimumVisualStudioVersion>

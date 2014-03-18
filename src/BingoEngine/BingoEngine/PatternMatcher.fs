@@ -15,11 +15,18 @@ module PatternMatcher =
                 else BingoCard.NotCalled num
             | _ -> cell
         
-        [|
-            card.[0] |> Array.map markNumber
-            card.[1] |> Array.map markNumber
-            card.[2] |> Array.map markNumber
-            card.[3] |> Array.map markNumber
-            card.[4] |> Array.map markNumber
-        |]
+        let i = Bingo.getCol ball
+
+        match i with
+        | Some i -> 
+            [|
+                for row in 0..4 ->
+                [|
+                    for col in 0..4 ->
+                        if col = i then
+                            card.[row].[i] |> markNumber
+                        else card.[row].[col]                                         
+                |]
+            |]
+        | None -> card        
      
