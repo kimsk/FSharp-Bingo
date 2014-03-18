@@ -6,7 +6,10 @@ module Util =
     let rng = new Random()
 
     // http://lorgonblog.wordpress.com/2008/03/05/play-ball-in-f/
-    let Shuffle (arr:int []) =
+    let Shuffle (org:int []) =
+        // clone original array
+        let arr = Array.copy org
+
         let n = arr.Length
         for x in 1..n do
             let i = n-x
