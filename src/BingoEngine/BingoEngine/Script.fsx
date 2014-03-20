@@ -8,13 +8,31 @@ open BingoEngine
 
 let card = BingoCard.createNewCard()
 
-let cardStr = BingoCard.printNewCard card
+BingoCard.toStr card |> printfn "%s"
 
-printfn "%s" cardStr
-
-let balls = BallCaller.callBalls() |> Seq.take 20
+let balls = BallCaller.callBalls() |> Seq.take 50
 
 balls
 |> Seq.fold PatternMatcher.markBall card
-|> BingoCard.printNewCard
+|> BingoCard.toStr
 |> (printfn "%s")
+
+
+let card' = balls |> Seq.fold PatternMatcher.markBall card
+
+(BingoCard.toStr card') |> printfn "%s" 
+
+let cards = 
+    [
+        BingoPatterns.horizontalLines0
+        BingoPatterns.horizontalLines1
+        BingoPatterns.horizontalLines2
+        BingoPatterns.horizontalLines3
+        BingoPatterns.horizontalLines4
+    ] 
+    |> List.map (PatternMatcher.matchPattern card')
+    |> List.iter (fun card -> 
+                    match card with
+                    | Some c -> BingoCard.toStr c |> printfn "%s"
+                    | None -> ()
+                )
