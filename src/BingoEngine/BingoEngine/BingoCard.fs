@@ -29,8 +29,8 @@ module BingoCard =
             [|for i in 0..4 -> tmp.[i].[4]|]
         |]
 
-    let printNewCard card = 
-        let line = "=====================\r\n" 
+    let toStr card = 
+        let line = "+---+---+---+---+---+\r\n" 
         let text = "| B | I | N | G | O |\r\n"
         let printCell cell =
             match cell with
@@ -42,7 +42,7 @@ module BingoCard =
                 if num < 10 then sprintf " *%d" num
                 else sprintf "*%d" num
             | InPattern num ->
-                if num < 10 then sprintf "  %d" num
+                if num < 10 then sprintf " #%d" num
                 else sprintf "#%d" num
 
         let getRowStr row =
