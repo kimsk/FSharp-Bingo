@@ -25,24 +25,27 @@ module BingoCard =
         | Marked cells -> Some cells
         | _ -> None
 
-    let createNewCard () =
-        let tmp = [|
-                    (Shuffle B).[..4] |> Array.map NotCalled
-                    (Shuffle I).[..4] |> Array.map NotCalled
-                    (Shuffle N).[..4] |> Array.map NotCalled
-                    (Shuffle G).[..4] |> Array.map NotCalled
-                    (Shuffle O).[..4] |> Array.map NotCalled
+    let createCells f =
+        [|
+            for row in 0..4 ->                
+                [|
+                    for col in 0..4 ->
+                        f row col
                 |]
+        |]
+
+    let createNewCard () =
+        let tmp = 
+            [|
+                (Shuffle B).[..4] |> Array.map NotCalled
+                (Shuffle I).[..4] |> Array.map NotCalled
+                (Shuffle N).[..4] |> Array.map NotCalled
+                (Shuffle G).[..4] |> Array.map NotCalled
+                (Shuffle O).[..4] |> Array.map NotCalled
+            |]
 
         tmp.[2].[2] <- Center
-
-        New [|
-                [|for i in 0..4 -> tmp.[i].[0]|]
-                [|for i in 0..4 -> tmp.[i].[1]|]
-                [|for i in 0..4 -> tmp.[i].[2]|]
-                [|for i in 0..4 -> tmp.[i].[3]|]
-                [|for i in 0..4 -> tmp.[i].[4]|]
-            |]
+        New(createCells (fun row col -> tmp.[col].[row]))
 
     let toStr card = 
         let cells = 

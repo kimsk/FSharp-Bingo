@@ -24,16 +24,13 @@ module PatternMatcher =
             let i = Bingo.getCol ball        
             match i with
             | Some i -> 
-                Marked
-                    [|
-                        for row in 0..4 ->
-                        [|
-                            for col in 0..4 ->
-                                if col = i then
-                                    cells.[row].[i] |> markNumber
-                                else cells.[row].[col]                                         
-                        |]
-                    |]
+                let f = (fun row col -> 
+                    if col = i then
+                        cells.[row].[i] |> markNumber                        
+                    else cells.[row].[col]      
+                    )                 
+                        
+                Marked(createCells f)
             | None -> Marked cells
         | _ -> card        
      
@@ -44,7 +41,7 @@ module PatternMatcher =
             | _ -> false
 
         match card with
-        | MarkedCard cells ->
+        | MarkedCard cells ->            
             let matchedCells = 
                 [
                     for row in 0..4 do
@@ -59,18 +56,25 @@ module PatternMatcher =
                 | cell -> cell
 
             if Set.isSubset pattern matchedCells then
+                let f = (fun row col -> 
+                    if pattern |> Set.exists ((=)(row,col)) then
+                        inPatternCell cells.[row].[col] 
+                    else
+                        cells.[row].[col]
+                )
                 Some 
-                    (Matched
-                        [|
-                            for row in 0..4 ->
-                            [|
-                                for col in 0..4 ->
-                                    if pattern |> Set.exists ((=)(row,col)) then
-                                        inPatternCell cells.[row].[col] 
-                                    else
-                                        cells.[row].[col]
-                            |]
-                        |])
+                    (Matched(createCells f)
+//                        [|
+//                            for row in 0..4 ->
+//                            [|
+//                                for col in 0..4 ->
+//                                    if pattern |> Set.exists ((=)(row,col)) then
+//                                        inPatternCell cells.[row].[col] 
+//                                    else
+//                                        cells.[row].[col]
+//                            |]
+//                        |]
+                        )
             else None
         | _ -> None
              
