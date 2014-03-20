@@ -10,6 +10,21 @@ module BingoCard =
         | Called of int
         | InPattern of int
 
+    type Card = 
+        | New of Cell[][]
+        | Marked of Cell[][]
+        | Matched of Cell[][]
+
+    let (|NewCard|_|) card =
+        match card with
+        | New cells -> Some cells
+        | _ -> None
+
+    let (|MarkedCard|_|) card =
+        match card with
+        | Marked cells -> Some cells
+        | _ -> None
+
     let createNewCard () =
         let tmp = [|
                     (Shuffle B).[..4] |> Array.map NotCalled
@@ -21,15 +36,21 @@ module BingoCard =
 
         tmp.[2].[2] <- Center
 
-        [|
-            [|for i in 0..4 -> tmp.[i].[0]|]
-            [|for i in 0..4 -> tmp.[i].[1]|]
-            [|for i in 0..4 -> tmp.[i].[2]|]
-            [|for i in 0..4 -> tmp.[i].[3]|]
-            [|for i in 0..4 -> tmp.[i].[4]|]
-        |]
+        New [|
+                [|for i in 0..4 -> tmp.[i].[0]|]
+                [|for i in 0..4 -> tmp.[i].[1]|]
+                [|for i in 0..4 -> tmp.[i].[2]|]
+                [|for i in 0..4 -> tmp.[i].[3]|]
+                [|for i in 0..4 -> tmp.[i].[4]|]
+            |]
 
     let toStr card = 
+        let cells = 
+            match card with
+            | New cells -> cells
+            | Marked cells -> cells
+            | Matched cells -> cells
+
         let line = "+---+---+---+---+---+\r\n" 
         let text = "| B | I | N | G | O |\r\n"
         let printCell cell =
@@ -50,7 +71,7 @@ module BingoCard =
             |> Array.fold (fun acc i -> acc + (printCell i) + "|") "|"
 
         let cardStr = 
-            card |> Array.fold (fun acc r -> acc + (getRowStr r) + "\r\n") ""
+            cells |> Array.fold (fun acc r -> acc + (getRowStr r) + "\r\n") ""
             
         line + text + line + cardStr + line         
                 
