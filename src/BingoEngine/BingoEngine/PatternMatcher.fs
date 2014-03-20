@@ -10,7 +10,7 @@ module BingoPatterns =
 module PatternMatcher =
     open BingoCard
     
-    let markBall (card:Cell[][]) ball =
+    let markBall card ball =
         let markNumber cell =
             match cell with
             | NotCalled num ->
@@ -18,50 +18,59 @@ module PatternMatcher =
                 else BingoCard.NotCalled num
             | _ -> cell
         
-        let i = Bingo.getCol ball
-
-        match i with
-        | Some i -> 
-            [|
-                for row in 0..4 ->
-                [|
-                    for col in 0..4 ->
-                        if col = i then
-                            card.[row].[i] |> markNumber
-                        else card.[row].[col]                                         
-                |]
-            |]
-        | None -> card        
+        match card with
+        | NewCard cells 
+        | MarkedCard cells -> 
+            let i = Bingo.getCol ball        
+            match i with
+            | Some i -> 
+                Marked
+                    [|
+                        for row in 0..4 ->
+                        [|
+                            for col in 0..4 ->
+                                if col = i then
+                                    cells.[row].[i] |> markNumber
+                                else cells.[row].[col]                                         
+                        |]
+                    |]
+            | None -> Marked cells
+        | _ -> card        
      
-    let matchPattern (card:Cell[][]) pattern =
+    let matchPattern card pattern =
         let matchCell =
             function
             | Center | Called _ -> true
             | _ -> false
 
-        let matchedCells = 
-            [
-                for row in 0..4 do
-                    for col in 0..4 do                                
-                        if matchCell card.[row].[col] then
-                            yield (row,col)                
-            ] |> Set.ofList
+        match card with
+        | MarkedCard cells ->
+            let matchedCells = 
+                [
+                    for row in 0..4 do
+                        for col in 0..4 do                                
+                            if matchCell cells.[row].[col] then
+                                yield (row,col)                
+                ] |> Set.ofList
 
-        let inPatternCell =
-            function
-            | Called i -> InPattern i
-            | cell -> cell
+            let inPatternCell =
+                function
+                | Called i -> InPattern i
+                | cell -> cell
 
-        if Set.isSubset pattern matchedCells then
-            Some [|
-                    for row in 0..4 ->
-                    [|
-                        for col in 0..4 ->
-                            if pattern |> Set.exists ((=)(row,col)) then
-                                inPatternCell card.[row].[col] 
-                            else
-                                card.[row].[col]
-                    |]
-                |]
-        else None
+            if Set.isSubset pattern matchedCells then
+                Some 
+                    (Matched
+                        [|
+                            for row in 0..4 ->
+                            [|
+                                for col in 0..4 ->
+                                    if pattern |> Set.exists ((=)(row,col)) then
+                                        inPatternCell cells.[row].[col] 
+                                    else
+                                        cells.[row].[col]
+                            |]
+                        |])
+            else None
+        | _ -> None
              
