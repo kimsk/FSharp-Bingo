@@ -48,26 +48,23 @@ module BingoCard =
         New(createCells (fun row col -> tmp.[col].[row]))
 
     let toStr card = 
-        let cells = 
+        let cells, line = 
             match card with
-            | New cells -> cells
-            | Marked cells -> cells
-            | Matched cells -> cells
+            | New cells -> cells, "---------------------\r\n"
+            | Marked cells -> cells, "+---+---+---+---+---+\r\n"
+            | Matched cells -> cells, "=====================\r\n"
 
-        let line = "+---+---+---+---+---+\r\n" 
+        //let line = "+---+---+---+---+---+\r\n" 
         let text = "| B | I | N | G | O |\r\n"
         let printCell cell =
             match cell with
             | Center -> " X "
             | NotCalled num -> 
-                if num < 10 then sprintf "  %d" num
-                else sprintf " %d" num
+                sprintf "%3i" num
             | Called num -> 
-                if num < 10 then sprintf " *%d" num
-                else sprintf "*%d" num
+                sprintf "*%2i" num
             | InPattern num ->
-                if num < 10 then sprintf " #%d" num
-                else sprintf "#%d" num
+                sprintf "#%2i" num
 
         let getRowStr row =
             row 
