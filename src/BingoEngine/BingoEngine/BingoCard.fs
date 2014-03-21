@@ -25,14 +25,7 @@ module BingoCard =
         | Marked cells -> Some cells
         | _ -> None
 
-    let createCells f =
-        [|
-            for row in 0..4 ->                
-                [|
-                    for col in 0..4 ->
-                        f row col
-                |]
-        |]
+    let createCells f = [| for row in 0..4 -> [| for col in 0..4 -> f row col|] |]
 
     let createNewCard () =
         let tmp = 
@@ -45,6 +38,7 @@ module BingoCard =
             |]
 
         tmp.[2].[2] <- Center
+
         New(createCells (fun row col -> tmp.[col].[row]))
 
     let toStr card = 
@@ -65,12 +59,9 @@ module BingoCard =
             | InPattern num ->
                 sprintf "#%2i" num
 
-        let getRowStr row =
-            row 
-            |> Array.fold (fun acc i -> acc + (printCell i) + "|") "|"
+        let getRowStr row = row |> Array.fold (fun acc i -> acc + (printCell i) + "|") "|"
 
-        let cardStr = 
-            cells |> Array.fold (fun acc r -> acc + (getRowStr r) + "\r\n") ""
+        let cardStr = cells |> Array.fold (fun acc r -> acc + (getRowStr r) + "\r\n") ""
             
         line + text + line + cardStr + line         
                 

@@ -12,15 +12,9 @@ BingoCard.toStr card |> printfn "%s"
 
 let balls = BallCaller.callBalls() |> Seq.take 50
 
-balls
-|> Seq.fold PatternMatcher.markBall card
-|> BingoCard.toStr
-|> (printfn "%s")
-
-
 let card' = balls |> Seq.fold PatternMatcher.markBall card
 
-(BingoCard.toStr card') |> printfn "%s" 
+BingoCard.toStr card' |> printfn "%s" 
 
 let cards = 
     BingoPatterns.Patterns
