@@ -2,6 +2,7 @@
 #load "Bingo.fs"
 #load "BingoCard.fs"
 #load "BallCaller.fs"
+#load "BingoPatterns.fs"
 #load "PatternMatcher.fs"
 
 open BingoEngine
@@ -18,11 +19,13 @@ BingoCard.toStr card' |> printfn "%s"
 
 let cards = 
     BingoPatterns.Patterns
-    |> List.map (fun p -> p.Pattern)
-    |> List.map (PatternMatcher.matchPattern card')
-    |> List.iter (fun card -> 
+    |> List.map (fun p -> p.Name, p.Pattern)
+    |> List.map (fun (name, pattern) -> name, (PatternMatcher.matchPattern card' pattern))
+    |> List.iter (fun (name, card) -> 
                     match card with
-                    | Some c -> BingoCard.toStr c |> printfn "%s"
+                    | Some c -> 
+                        printfn "%s" name
+                        BingoCard.toStr c |> printfn "%s"
                     | None -> ()
                 )
 
