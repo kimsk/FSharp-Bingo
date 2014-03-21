@@ -17,8 +17,7 @@ let card' = balls |> Seq.fold PatternMatcher.markBall card
 
 BingoCard.toStr card' |> printfn "%s" 
 
-let cards = 
-    BingoPatterns.Patterns
+BingoPatterns.Patterns
     |> List.map (fun p -> p.Name, p.Pattern)
     |> List.map (fun (name, pattern) -> name, (PatternMatcher.matchPattern card' pattern))
     |> List.iter (fun (name, card) -> 
