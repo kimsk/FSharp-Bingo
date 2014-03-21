@@ -54,7 +54,6 @@ module BingoCard =
             | Marked cells -> cells, "+---+---+---+---+---+\r\n"
             | Matched cells -> cells, "=====================\r\n"
 
-        //let line = "+---+---+---+---+---+\r\n" 
         let text = "| B | I | N | G | O |\r\n"
         let printCell cell =
             match cell with
