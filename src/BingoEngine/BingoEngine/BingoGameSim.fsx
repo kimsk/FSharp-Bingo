@@ -6,7 +6,6 @@
 #load "PatternMatcher.fs"
 
 open BingoEngine
-open System.Linq
 
 let patterns = 
     [
@@ -24,10 +23,10 @@ let patterns =
                 "vertical-5"
                 "Diagonal-1"
                 "Diagonal-2"
-            ] |> Seq.ofList
+            ]
 
         for p in BingoPatterns.Patterns do
-            if eligiblePatterns.Any(fun ep -> ep = p.Name) then
+            if eligiblePatterns |> Seq.exists ((=)(p.Name)) then
                 yield p
     ] 
 
