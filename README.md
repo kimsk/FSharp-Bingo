@@ -1,9 +1,9 @@
-FSharp-Bingo
-============
+Bingo game with F#
+-----------------
 
-Bingo game engine implemented in F#.
+Bingo game engine [implemented](https://github.com/kimsk/FSharp-Bingo/tree/master/src/BingoEngine/BingoEngine) and [simulated](https://github.com/kimsk/FSharp-Bingo/blob/master/src/BingoEngine/BingoEngine/BingoGameSim.fsx) in F#. 
 
-#### Bingo Card module
+#### [Bingo Card module](https://github.com/kimsk/FSharp-Bingo/blob/master/src/BingoEngine/BingoEngine/BingoCard.fs)
 ```fsharp
 type Cell =
     | Center
@@ -43,15 +43,15 @@ PatternMatcher.markBall card 13
 |  8| 24| 34| 47| 69|
 
 
-#### Bingo Card with Pattern
-```fsharp
-PatternMatcher.matchPattern c pattern
-```
-
-#### Bingo Pattern
+#### [Bingo Pattern](https://github.com/kimsk/FSharp-Bingo/blob/master/src/BingoEngine/BingoEngine/BingoPatterns.fs)
 ```fsharp
 type Pattern = {Name:string; Pattern:Set<int*int>}
 let vertical5 = {Name = "vertical-5"; Pattern = [(0,4);(1,4);(2,4);(3,4);(4,4)] |> Set.ofList}
+```
+
+#### Match Bingo Card with Pattern using [PatternMatcher](https://github.com/kimsk/FSharp-Bingo/blob/master/src/BingoEngine/BingoEngine/PatternMatcher.fs)
+```fsharp
+PatternMatcher.matchPattern card vertical5.Pattern
 ```
 
 vertical-5
