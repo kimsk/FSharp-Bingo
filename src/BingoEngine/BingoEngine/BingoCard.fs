@@ -15,16 +15,6 @@ module BingoCard =
         | Marked of Cell[][]
         | Matched of Cell[][]
 
-    let (|NewCard|_|) card =
-        match card with
-        | New cells -> Some cells
-        | _ -> None
-
-    let (|MarkedCard|_|) card =
-        match card with
-        | Marked cells -> Some cells
-        | _ -> None
-
     let createCells f = [| for row in 0..4 -> [| for col in 0..4 -> f row col|] |]
 
     let createNewCard () =

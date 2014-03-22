@@ -12,8 +12,8 @@ module PatternMatcher =
             | _ -> cell
         
         match card with
-        | NewCard cells 
-        | MarkedCard cells -> 
+        | New cells 
+        | Marked cells -> 
             let i = Bingo.getCol ball        
             match i with
             | Some i -> 
@@ -34,7 +34,7 @@ module PatternMatcher =
             | _ -> false
 
         match card with
-        | MarkedCard cells ->            
+        | Marked cells ->            
             let matchedCells = 
                 [
                     for row in 0..4 do
