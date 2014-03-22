@@ -10,7 +10,7 @@ open System.Linq
 
 let patterns = 
     [
-        let elgiblePatterns = 
+        let eligiblePatterns = 
             [
                 "horizontal-1"
                 "horizontal-2"
@@ -27,7 +27,7 @@ let patterns =
             ] |> Seq.ofList
 
         for p in BingoPatterns.Patterns do
-            if elgiblePatterns.Any(fun ep -> ep = p.Name) then
+            if eligiblePatterns.Any(fun ep -> ep = p.Name) then
                 yield p
     ] 
 
