@@ -15,6 +15,8 @@ module BingoPatterns =
             {Name = "vertical-3"; Pattern = [(0,2);(1,2);(2,2);(3,2);(4,2)] |> Set.ofList}
             {Name = "vertical-4"; Pattern = [(0,3);(1,3);(2,3);(3,3);(4,3)] |> Set.ofList}
             {Name = "vertical-5"; Pattern = [(0,4);(1,4);(2,4);(3,4);(4,4)] |> Set.ofList}
+            { Name = "Diagonal-1"; Pattern = [(0,0);(1,1);(2,2);(3,3);(4,4);] |> Set.ofList};
+            { Name = "Diagonal-2"; Pattern = [(4,0);(3,1);(2,2);(1,3);(0,4)] |> Set.ofList};
             { Name = "2 Stamps-1"; Pattern = [(0,0);(0,1);(1,0);(1,1);(3,0);(4,0);(4,1);(3,1)] |> Set.ofList};
             { Name = "2 Stamps-2"; Pattern = [(0,0);(1,0);(1,1);(0,1);(0,3);(1,3);(1,4);(0,4)] |> Set.ofList};
             { Name = "2 Stamps-3"; Pattern = [(0,0);(1,0);(1,1);(0,1);(3,3);(4,3);(4,4);(3,4)] |> Set.ofList};
