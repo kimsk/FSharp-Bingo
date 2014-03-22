@@ -48,6 +48,7 @@
     <Compile Include="BallCaller.fs" />
     <Compile Include="BingoPatterns.fs" />
     <Compile Include="PatternMatcher.fs" />
+    <None Include="BingoGameSim.fsx" />
     <None Include="Script.fsx" />
   </ItemGroup>
   <PropertyGroup>
