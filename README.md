@@ -22,45 +22,56 @@ type Card =
 ```fsharp
 BingoCard.createNewCard()
 ```
+```
+---------------------
 | B | I | N | G | O |
-|---|---|---|---|---|
-| 13| 20| 44| 52| 62|
-|  6| 26| 45| 54| 68|
-|  7| 19| X | 51| 66|
-|  9| 25| 36| 53| 74|
-|  8| 24| 34| 47| 69|
+---------------------
+|  3| 25| 32| 57| 75|
+|  1| 29| 31| 48| 66|
+| 15| 18| X | 54| 68|
+|  8| 27| 33| 56| 63|
+|  4| 28| 37| 55| 64|
+---------------------
+```
 
 #### Mark or Daub Bingo Card
 ```fsharp
-PatternMatcher.markBall card 13
+PatternMatcher.markBall card 8
 ```
+```
++---+---+---+---+---+
 | B | I | N | G | O |
-|---|---|---|---|---|
-|*13| 20| 44| 52| 62|
-|  6| 26| 45| 54| 68|
-|  7| 19| X | 51| 66|
-|  9| 25| 36| 53| 74|
-|  8| 24| 34| 47| 69|
++---+---+---+---+---+
+|  3| 25| 32| 57| 75|
+|  1| 29| 31| 48| 66|
+| 15| 18| X | 54| 68|
+|* 8| 27| 33| 56| 63|
+|  4| 28| 37| 55| 64|
++---+---+---+---+---+
+```
 
 
 #### [Bingo Pattern](https://github.com/kimsk/FSharp-Bingo/blob/master/src/BingoEngine/BingoEngine/BingoPatterns.fs)
 ```fsharp
 type Pattern = {Name:string; Pattern:Set<int*int>}
-let vertical5 = {Name = "vertical-5"; Pattern = [(0,4);(1,4);(2,4);(3,4);(4,4)] |> Set.ofList}
+let diagonal2 = { Name = "Diagonal-2"; Pattern = [(4,0);(3,1);(2,2);(1,3);(0,4)] |> Set.ofList};
 ```
 
 #### Match Bingo Card with Pattern using [PatternMatcher](https://github.com/kimsk/FSharp-Bingo/blob/master/src/BingoEngine/BingoEngine/PatternMatcher.fs)
 ```fsharp
-PatternMatcher.matchPattern card vertical5.Pattern
+PatternMatcher.matchPattern card diagonal2.Pattern
 ```
 
-vertical-5
-
+Diagonal-2
+```
+=====================
 | B | I | N | G | O |
-|---|---|---|---|---|
-|  4|*25| 32|*49|#75|
-|* 5| 18| 41| 53|#65|
-|  8| 24| X | 48|#72|
-|  1|*23| 43| 57|#64|
-|  9| 29| 36| 59|#70|
+=====================
+|  3| 25| 32| 57|#75|
+|  1| 29| 31|#48| 66|
+| 15| 18| X | 54| 68|
+|* 8|#27| 33| 56| 63|
+|# 4| 28| 37| 55| 64|
+=====================
+```
 
