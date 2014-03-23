@@ -93,7 +93,7 @@ let rec callBallParallel (cards:BingoCard.Card list) (balls:int list) =
             |> List.fold (fun acc c -> acc + "\r\n" + BingoCard.toStr(c)+"\r\n") ""
 
 
-let cards = [1..1000] |> List.map (fun _ -> BingoCard.createNewCard())
+let cards = [1..100000] |> List.map (fun _ -> BingoCard.createNewCard())
 
 for c in cards do
     c |> BingoCard.toStr |> printfn "%s"
@@ -108,6 +108,18 @@ let winner = callBall cards balls
 let winner' = callBallParallel cards balls           
 #time
 
+#time
+let cards' = [ for c in cards -> markBallAsync c 1] 
+                        |> Async.Parallel 
+                        |> Async.RunSynchronously 
+                        |> ignore
+#time 
+
+#time
+cards |> List.map (fun c -> PatternMatcher.markBall c 1) |> ignore
+#time
+
+// www.voyce.com/index.php/2011/05/27/fsharp-async-plays-well-with-others/
 let work i =
     async {
         do! Async.Sleep(500)
@@ -123,3 +135,40 @@ let run _ =
 run 1
 #time
 
+// http://fsharpforfunandprofit.com/posts/concurrency-async-and-parallel/
+let childTask() = 
+    // chew up some CPU. 
+    for i in [1..1000] do 
+        for i in [1..1000] do 
+            do "Hello".Contains("H") |> ignore 
+            // we don't care about the answer!
+
+// Test the child task on its own.
+// Adjust the upper bounds as needed
+// to make this run in about 0.2 sec
+#time
+childTask()
+#time
+
+let parentTask = 
+    childTask
+    |> List.replicate 20
+    |> List.reduce (>>)
+
+//test
+#time
+parentTask()
+#time
+
+let asyncChildTask = async { return childTask() }
+
+let asyncParentTask = 
+    asyncChildTask
+    |> List.replicate 20
+    |> Async.Parallel
+
+//test
+#time
+asyncParentTask 
+|> Async.RunSynchronously
+#time
