@@ -93,7 +93,7 @@ let rec callBallParallel (cards:BingoCard.Card list) (balls:int list) =
             |> List.fold (fun acc c -> acc + "\r\n" + BingoCard.toStr(c)+"\r\n") ""
 
 
-let cards = [1..100000] |> List.map (fun _ -> BingoCard.createNewCard())
+let cards = [1..1000000] |> List.map (fun _ -> BingoCard.createNewCard())
 
 for c in cards do
     c |> BingoCard.toStr |> printfn "%s"
@@ -108,15 +108,38 @@ let winner = callBall cards balls
 let winner' = callBallParallel cards balls           
 #time
 
-#time
-let cards' = [ for c in cards -> markBallAsync c 1] 
-                        |> Async.Parallel 
-                        |> Async.RunSynchronously 
-                        |> ignore
-#time 
-
+// sequential
 #time
 cards |> List.map (fun c -> PatternMatcher.markBall c 1) |> ignore
+#time
+
+// parallel 1
+// too many async, this can be worse than sequential
+#time
+[ for c in cards -> markBallAsync c 1] 
+    |> Async.Parallel 
+    |> Async.RunSynchronously 
+    |> ignore
+#time 
+
+// parallel 2
+// Small number of async gives best result
+let groupCards cards groupNum =
+    let numPerGroup = (cards |> Seq.length)/groupNum
+    printfn "%i %i %i" (cards |> Seq.length) groupNum numPerGroup    
+    [0..groupNum-1] 
+        |> List.fold (fun acc gr -> (cards |> Seq.skip (gr*numPerGroup) |> Seq.take numPerGroup |> List.ofSeq)::acc) []
+
+let groups = groupCards cards 8
+let markBallOnCardsAsync cards ball =
+    async {
+        return (cards |> List.map (fun c -> PatternMatcher.markBall c ball)) 
+    }
+#time
+[ for cards in groups -> markBallOnCardsAsync cards 1 ] 
+    |> Async.Parallel 
+    |> Async.RunSynchronously 
+    |> ignore   
 #time
 
 // www.voyce.com/index.php/2011/05/27/fsharp-async-plays-well-with-others/
