@@ -36,7 +36,7 @@ BingoCard.createNewCard()
 
 #### Mark or Daub Bingo Card
 ```fsharp
-PatternMatcher.markBall card 8
+PatternMatcher.markBall 8 card
 ```
 ```
 +---+---+---+---+---+
@@ -75,3 +75,11 @@ Diagonal-2
 =====================
 ```
 
+#### Function composition
+```fsharp
+let markFirstBall = PatternMatcher.markBall 1
+let matchFirstPattern = PatternMatcher.matchPattern (BingoPatterns.Patterns.Head.Pattern)
+let markCard' = markFirstBall >> matchFirstPattern
+
+markCard' card
+```
