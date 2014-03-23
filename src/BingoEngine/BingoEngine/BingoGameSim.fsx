@@ -60,11 +60,9 @@ for c in cards do
     c |> BingoCard.toStr |> printfn "%s"
                
 let balls = BallCaller.callBalls() |> Seq.take 30 |> List.ofSeq
+
+#time
 let winner = callBall cards balls           
-
-        
-
-    
-
+#time
              
         
