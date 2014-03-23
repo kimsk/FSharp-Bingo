@@ -59,7 +59,7 @@ let diagonal2 = { Name = "Diagonal-2"; Pattern = [(4,0);(3,1);(2,2);(1,3);(0,4)]
 
 #### Match Bingo Card with Pattern using [PatternMatcher](https://github.com/kimsk/FSharp-Bingo/blob/master/src/BingoEngine/BingoEngine/PatternMatcher.fs)
 ```fsharp
-PatternMatcher.matchPattern card diagonal2.Pattern
+PatternMatcher.matchPattern diagonal2.Pattern card
 ```
 
 Diagonal-2
