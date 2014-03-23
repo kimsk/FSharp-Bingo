@@ -35,14 +35,19 @@ let rec callBall (cards:BingoCard.Card list) (balls:int list) =
     | [] -> "No Winner"
     | ball::tl ->
         printfn "Call Ball : %d" ball
-        let cards' = cards |> List.map (fun c -> PatternMatcher.markBall c ball)
+        let cards' = cards |> List.map (fun c -> PatternMatcher.markBall ball c)
         let cards'' = cards' 
                     |> List.collect (fun c -> 
                                         [
                                             for p in patterns do
-                                                let inPatternCard = (PatternMatcher.matchPattern c p.Pattern)
-                                                if inPatternCard.IsSome then
-                                                    yield (p.Name, inPatternCard.Value)
+                                                let c = (PatternMatcher.matchPattern p.Pattern c)
+                                                let ismatchedCard = 
+                                                    match c with
+                                                    | BingoCard.Matched _ -> true
+                                                    | _ -> false
+
+                                                if ismatchedCard then
+                                                    yield (p.Name, c)
                                         ]
                                 )        
         
@@ -56,12 +61,12 @@ let rec callBall (cards:BingoCard.Card list) (balls:int list) =
 
 let markBallAsync card ball =
     async {
-        return PatternMatcher.markBall card ball
+        return PatternMatcher.markBall ball card
     }
 
-let matchPatternAsync card (pattern) =
+let matchPatternAsync card pattern =
     async {
-        return PatternMatcher.matchPattern card pattern
+        return PatternMatcher.matchPattern pattern card
     }
 
 let rec callBallParallel (cards:BingoCard.Card list) (balls:int list) =    
@@ -80,8 +85,7 @@ let rec callBallParallel (cards:BingoCard.Card list) (balls:int list) =
                         [ for p in patterns -> matchPatternAsync c p.Pattern]
                         |> Async.Parallel
                         |> Async.RunSynchronously
-                        |> Array.filter (fun c -> c.IsSome)
-                        |> Array.map (fun c -> c.Value)
+                        |> Array.filter BingoCard.isMatchedCard                        
                         |> List.ofArray
                 ]
             list |> List.reduce (fun acc l -> l@acc) 
@@ -110,7 +114,8 @@ let winner' = callBallParallel cards balls
 
 // sequential
 #time
-cards |> List.map (fun c -> PatternMatcher.markBall c 1) |> ignore
+cards |> List.map (fun c -> PatternMatcher.markBall 1 c) 
+    //|> ignore
 #time
 
 // parallel 1
@@ -129,17 +134,19 @@ let groupCards cards groupNum =
     printfn "%i %i %i" (cards |> Seq.length) groupNum numPerGroup    
     [0..groupNum-1] 
         |> List.fold (fun acc gr -> (cards |> Seq.skip (gr*numPerGroup) |> Seq.take numPerGroup |> List.ofSeq)::acc) []
-
-let groups = groupCards cards 8
 let markBallOnCardsAsync cards ball =
     async {
-        return (cards |> List.map (fun c -> PatternMatcher.markBall c ball)) 
+        return (cards |> List.map (fun c -> PatternMatcher.markBall ball c)) 
     }
+
+#time
+let groups = groupCards cards 8
+#time
 #time
 [ for cards in groups -> markBallOnCardsAsync cards 1 ] 
     |> Async.Parallel 
     |> Async.RunSynchronously 
-    |> ignore   
+    //|> ignore   
 #time
 
 // www.voyce.com/index.php/2011/05/27/fsharp-async-plays-well-with-others/

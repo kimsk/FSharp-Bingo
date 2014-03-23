@@ -3,7 +3,7 @@
 module PatternMatcher =
     open BingoCard
     
-    let markBall card ball =
+    let markBall ball card =
         let markNumber cell =
             match cell with
             | NotCalled num ->
@@ -27,7 +27,7 @@ module PatternMatcher =
             | None -> Marked cells
         | _ -> card        
      
-    let matchPattern card pattern =
+    let matchPattern pattern card =
         let matchCell =
             function
             | Center | Called _ -> true
@@ -52,6 +52,8 @@ module PatternMatcher =
                     else
                         cells.[row].[col]
                 )
-                Some(Matched(createCells f))
-            else None
-        | _ -> None             
+                Matched(createCells f)
+            else card
+        | _ -> card             
+
+    let markBallAndCheckPattern card ball pattern = card |> markBall ball |> matchPattern pattern
