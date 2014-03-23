@@ -35,14 +35,14 @@ let rec callBall (cards:BingoCard.Card list) (balls:int list) =
     | [] -> "No Winner"
     | ball::tl ->
         printfn "Call Ball : %d" ball
-        let cards' = cards |> List.map (fun c -> PatternMatcher.markBall c ball)
+        let cards' = cards |> List.map (fun c -> PatternMatcher.markBall ball c)
         let cards'' = cards' 
                     |> List.collect (fun c -> 
                                         [
                                             for p in patterns do
-                                                let inPatternCard = (PatternMatcher.matchPattern c p.Pattern)
-                                                if inPatternCard.IsSome then
-                                                    yield (p.Name, inPatternCard.Value)
+                                                let c = (PatternMatcher.matchPattern p.Pattern c)
+                                                if BingoCard.isMatchedCard c then
+                                                    yield (p.Name, c)
                                         ]
                                 )        
         
@@ -54,7 +54,7 @@ let rec callBall (cards:BingoCard.Card list) (balls:int list) =
             list             
             |> List.fold (fun acc c -> acc + "\r\n" + fst(c) + "\r\n" + BingoCard.toStr(snd(c))+"\r\n") ""
 
-let cards = [1..10] |> List.map (fun _ -> BingoCard.createNewCard())
+let cards = [1..100] |> List.map (fun _ -> BingoCard.createNewCard())
 
 for c in cards do
     c |> BingoCard.toStr |> printfn "%s"
@@ -63,6 +63,5 @@ let balls = BallCaller.callBalls() |> Seq.take 30 |> List.ofSeq
 
 #time
 let winner = callBall cards balls           
-#time
-             
+#time             
         
