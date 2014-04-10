@@ -5,16 +5,15 @@ module Util =
 
     let rng = new Random()
 
-    // http://lorgonblog.wordpress.com/2008/03/05/play-ball-in-f/
-    let Shuffle (org:int []) =
-        // clone original array
+    let Shuffle (org:int[]) = 
         let arr = Array.copy org
-
-        let n = arr.Length
-        for x in 1..n do
-            let i = n-x
-            let j = rng.Next(i+1)
-            let tmp = arr.[i]
-            arr.[i] <- arr.[j]
-            arr.[j] <- tmp
-        arr
+        let max = (arr.Length - 1)
+        let randomSwap (arr:_[]) i =
+            let pos = rng.Next(max)
+            let tmp = arr.[pos]
+            arr.[pos] <- arr.[i]
+            arr.[i] <- tmp
+            arr
+    
+        [|0..max|] 
+            |> Array.fold randomSwap arr
