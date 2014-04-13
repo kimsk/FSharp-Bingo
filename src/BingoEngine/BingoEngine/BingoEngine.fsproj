@@ -51,6 +51,7 @@
     <None Include="BingoGameSim.fsx" />
     <None Include="Parallel.fsx" />
     <None Include="Script.fsx" />
+    <None Include="Array.Parallel.fsx" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">12</MinimumVisualStudioVersion>
