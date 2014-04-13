@@ -25,10 +25,12 @@ let patterns =
                 yield p
     ] 
 
+
+
 // Change list to array to utilize Array.Parallel
 
 #time
-let cards = [|1..1000|] |> Array.Parallel.map (fun _ -> BingoCard.createNewCard())
+let cards = [|1..100000|] |> Array.map (fun _ -> BingoCard.createNewCard())
 #time
 
 let balls = BallCaller.callBalls() |> Seq.take 30 |> List.ofSeq
